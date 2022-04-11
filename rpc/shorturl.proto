@@ -1,0 +1,44 @@
+syntax="proto3";
+
+package shorturl;
+
+option go_package = "/short-url-micro";
+
+message RegisterRquest {
+    string AppId = 1;
+    string Name = 2;
+} 
+message RegisterResponse {
+    string AppId = 1;
+    string AppSecret = 2;
+}
+
+message VerifyRequest {
+    string AppId = 1;
+    string AppSecret = 2;
+}
+message VerifyResponse {
+    string Token = 1;
+    string ExpireAt = 2;
+}
+
+message ShortenRequest {
+    string Long = 1;
+}
+message ShortenResponse {
+    string Short = 1;
+}
+
+message GetRequest {
+    string Short = 1;
+}
+message GetResponse {
+    string Long = 1;
+}
+
+service shorturl {
+    rpc Register(RegisterRquest) returns(RegisterResponse);
+    rpc Verify(VerifyRequest) returns(VerifyResponse);
+    rpc Shorten(ShortenRequest) returns(ShortenResponse);
+    rpc Get(GetRequest) returns(GetResponse);
+}

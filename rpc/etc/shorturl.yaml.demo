@@ -1,0 +1,15 @@
+Name: shorturl.rpc
+ListenOn: 127.0.0.1:9001
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: shorturl.rpc
+  # Pass: "123456"
+  # User: "root"
+Mysql:
+  DataSource: "root:lichmaker@tcp(127.0.0.1:3306)/shorturl?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+  MaxLifeTime: 300
+  MaxIdleConn: 100
+  MaxOpenConn: 25
+Jwt:
+  Secret: "12345678"

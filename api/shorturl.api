@@ -1,0 +1,63 @@
+syntax="v1"
+
+info(
+	title: "短链接http api"
+	author: "lichmaker"
+	email: "lich.wu2014@gmail.com"
+	version: 0.1
+)
+
+type RegisterRequest {
+	AppId       string `json:"appId"`
+	Name        string `json:"name"`
+	AdminSecret string `json:"adminSecret"`
+}
+type RegisterResponse {
+	Code      int64  `json:"code" default:"0"`
+	AppId     string `json:"appId"`
+	AppSecret string `json:"appSecret"`
+}
+
+type LoginRequest {
+	AppId     string `json:"appId"`
+	AppSecret string `json:"appSecret"`
+}
+type LoginResponse {
+	Code      int64  `json:"code" default:"0"`
+	Token     string `json:"token"`
+	ExpiredAt string `json:"expiredAt"`
+}
+
+type ShortenRequest {
+	Long string `json:"long"`
+}
+type ShortenResponse {
+	Code  int64  `json:"code" default:"0"`
+	Short string `json:"short"`
+}
+
+type JumpRequest {
+	Short string `path:"short"`
+}
+
+service shorturl {
+	@doc "注册api"
+	@handler register
+	post /api/appKey/register (RegisterRequest) returns(RegisterResponse)
+	
+	@doc "换取jwt"
+	@handler login
+	post /api/appKey/login (LoginRequest) returns(LoginResponse)
+	
+	@handler Jump
+	get /:short (JumpRequest)
+}
+
+@server(
+	jwt: Auth
+)
+service shorturl{
+	@doc "短链接"
+	@handler shorten
+	post /api/shorten (ShortenRequest) returns(ShortenResponse)
+}

@@ -1,0 +1,13 @@
+Name: shorturl
+Host: 0.0.0.0
+Port: 8888
+Auth:
+  AccessSecret: "12345678"
+  AccessExpire: 3600
+ShortRpc:
+  Etcd:
+    Hosts:
+    - 127.0.0.1:2379
+    Key: "shorturl.rpc"
+AdminSecret: "123456"
+AppHost: "127.0.0.1"
