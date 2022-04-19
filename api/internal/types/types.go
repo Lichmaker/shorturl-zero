@@ -8,7 +8,6 @@ type RegisterRequest struct {
 }
 
 type RegisterResponse struct {
-	Code      int64  `json:"code" default:"0"`
 	AppId     string `json:"appId"`
 	AppSecret string `json:"appSecret"`
 }
@@ -19,7 +18,6 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Code      int64  `json:"code" default:"0"`
 	Token     string `json:"token"`
 	ExpiredAt string `json:"expiredAt"`
 }
@@ -29,7 +27,6 @@ type ShortenRequest struct {
 }
 
 type ShortenResponse struct {
-	Code  int64  `json:"code" default:"0"`
 	Short string `json:"short"`
 }
 

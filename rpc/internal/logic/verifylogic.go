@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/lichmaker/short-url-micro/model/apps"
+	"github.com/lichmaker/short-url-micro/pkg/errx"
 	"github.com/lichmaker/short-url-micro/pkg/jwt"
 	"github.com/lichmaker/short-url-micro/rpc/internal/svc"
 	short_url_micro "github.com/lichmaker/short-url-micro/rpc/type/short-url-micro"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"github.com/pkg/errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -34,8 +34,11 @@ func (l *VerifyLogic) Verify(in *short_url_micro.VerifyRequest) (*short_url_micr
 	if err != nil {
 		return nil, err
 	}
+	if appModel.Id == 0 {
+		return nil, errors.Wrapf(errx.NewWithCode(errx.CODE_DATA_NOT_FOUND), "不存在该APPID:%s", in.AppId)
+	}
 	if strings.Compare(appModel.AppSecret, in.AppSecret) != 0 {
-		return nil, status.Error(codes.InvalidArgument, "密码错误")
+		return nil, errors.Wrapf(errx.New(errx.CODE_UNAUTHORIZED, "密码错误"), "密码错误! appid:%s, appsecret:%s", in.AppId, in.AppSecret)
 	}
 
 	myJwt := &jwt.MyJwt{Secret: l.svcCtx.Config.Jwt.Secret}

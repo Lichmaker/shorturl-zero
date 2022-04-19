@@ -8,11 +8,11 @@ import (
 	"github.com/lichmaker/short-url-micro/api/internal/config"
 	"github.com/lichmaker/short-url-micro/api/internal/handler"
 	"github.com/lichmaker/short-url-micro/api/internal/svc"
-	"github.com/lichmaker/short-url-micro/pkg/errorx"
+	"github.com/lichmaker/short-url-micro/pkg/apiresponse"
+	"github.com/lichmaker/short-url-micro/pkg/errx"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 var configFile = flag.String("f", "etc/shorturl.yaml", "the config file")
@@ -24,19 +24,16 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	ctx := svc.NewServiceContext(c)
-	server := rest.MustNewServer(c.RestConf)
+	server := rest.MustNewServer(c.RestConf, rest.WithNotFoundHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		apiresponse.Do(r.Context(), w, nil, errx.NewWithCode(errx.CODE_NOT_FOUND_HANDLER))
+	})), rest.WithNotAllowedHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		apiresponse.Do(r.Context(), w, nil, errx.New(errx.CODE_UNAUTHORIZED, "无权操作"))
+	})), rest.WithUnauthorizedCallback(func(w http.ResponseWriter, r *http.Request, err error) {
+		apiresponse.Do(r.Context(), w, nil, errx.New(errx.CODE_UNAUTHORIZED, "认证错误"))
+	}))
 	defer server.Stop()
 
 	handler.RegisterHandlers(server, ctx)
-
-	httpx.SetErrorHandler(func(err error) (int, interface{}) {
-		switch e := err.(type) {
-		case *errorx.CodeError:
-			return http.StatusOK, e.Data()
-		default:
-			return http.StatusInternalServerError, &errorx.CodeErrorResponse{Code: -1, ErrMsg: e.Error()}
-		}
-	})
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()

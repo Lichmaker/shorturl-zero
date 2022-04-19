@@ -25,7 +25,16 @@ func NewShortenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShortenLo
 }
 
 func (l *ShortenLogic) Shorten(in *short_url_micro.ShortenRequest) (*short_url_micro.ShortenResponse, error) {
-	model, err := shorten.Make(l.svcCtx.GormDB, in.Long)
+
+	shortenInstance := &shorten.Shorten{
+		Ctx:      l.ctx,
+		GormDB:   l.svcCtx.GormDB,
+		Redis:    l.svcCtx.Redis,
+		BloomKey: l.svcCtx.Config.BloomRedisKey,
+		Sg:       l.svcCtx.ShortenSg,
+	}
+
+	model, err := shortenInstance.Make(in.Long)
 	if err != nil {
 		return nil, err
 	}

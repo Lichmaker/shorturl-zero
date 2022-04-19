@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/lichmaker/short-url-micro/pkg/intercepter"
 	"github.com/lichmaker/short-url-micro/rpc/internal/config"
 	"github.com/lichmaker/short-url-micro/rpc/internal/server"
 	"github.com/lichmaker/short-url-micro/rpc/internal/svc"
@@ -33,6 +34,10 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+
+	// 加入自定义的拦截器
+	s.AddUnaryInterceptors(intercepter.MyRpcIntercepter)
+
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)

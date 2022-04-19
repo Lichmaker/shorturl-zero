@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/lichmaker/short-url-micro/model/apps"
+	"github.com/lichmaker/short-url-micro/pkg/errx"
 	"github.com/lichmaker/short-url-micro/pkg/helpers"
 	"github.com/lichmaker/short-url-micro/rpc/internal/svc"
 	short_url_micro "github.com/lichmaker/short-url-micro/rpc/type/short-url-micro"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"github.com/pkg/errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *RegisterLogic) Register(in *short_url_micro.RegisterRquest) (*short_url
 		return nil, err
 	}
 	if appIdModel.Id > 0 {
-		return nil, status.Errorf(codes.AlreadyExists, "AppId已存在:%s", in.AppId)
+		return nil, errors.Wrapf(errx.NewWithCode(errx.CODE_DATA_EXISTS), "注册失败，appid已存在:%s", in.AppId)
 	}
 
 	model := &apps.Apps{

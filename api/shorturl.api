@@ -13,7 +13,6 @@ type RegisterRequest {
 	AdminSecret string `json:"adminSecret"`
 }
 type RegisterResponse {
-	Code      int64  `json:"code" default:"0"`
 	AppId     string `json:"appId"`
 	AppSecret string `json:"appSecret"`
 }
@@ -23,7 +22,6 @@ type LoginRequest {
 	AppSecret string `json:"appSecret"`
 }
 type LoginResponse {
-	Code      int64  `json:"code" default:"0"`
 	Token     string `json:"token"`
 	ExpiredAt string `json:"expiredAt"`
 }
@@ -32,7 +30,6 @@ type ShortenRequest {
 	Long string `json:"long"`
 }
 type ShortenResponse {
-	Code  int64  `json:"code" default:"0"`
 	Short string `json:"short"`
 }
 

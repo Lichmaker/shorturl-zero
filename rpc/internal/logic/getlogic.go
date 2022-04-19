@@ -3,11 +3,11 @@ package logic
 import (
 	"context"
 
-	"github.com/lichmaker/short-url-micro/model/shorts"
+	"github.com/lichmaker/short-url-micro/pkg/errx"
+	"github.com/lichmaker/short-url-micro/pkg/shorten"
 	"github.com/lichmaker/short-url-micro/rpc/internal/svc"
 	short_url_micro "github.com/lichmaker/short-url-micro/rpc/type/short-url-micro"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"github.com/pkg/errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,12 +27,20 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 }
 
 func (l *GetLogic) Get(in *short_url_micro.GetRequest) (*short_url_micro.GetResponse, error) {
-	model, err := shorts.GetByShort(l.svcCtx.GormDB, in.Short)
+	shortenInstance := &shorten.Shorten{
+		Ctx:      l.ctx,
+		GormDB:   l.svcCtx.GormDB,
+		Redis:    l.svcCtx.Redis,
+		BloomKey: l.svcCtx.Config.BloomRedisKey,
+		Sg:       l.svcCtx.ShortenSg,
+	}
+
+	model, err := shortenInstance.Get(in.Short)
 	if err != nil {
 		return nil, err
 	}
 	if model.Id == 0 {
-		return nil, status.Error(codes.NotFound, "不存在的数据")
+		return nil, errors.Wrapf(errx.NewWithCode(errx.CODE_DATA_NOT_FOUND), "查询short model不存在。 short:%s", in.Short)
 	}
 
 	return &short_url_micro.GetResponse{

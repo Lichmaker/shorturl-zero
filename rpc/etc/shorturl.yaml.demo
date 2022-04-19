@@ -13,3 +13,7 @@ Mysql:
   MaxOpenConn: 25
 Jwt:
   Secret: "12345678"
+Redis:
+  Host: "127.0.0.1:6379"
+  Type: "node"
+BloomRedisKey: "short_url_micro_bloom"
