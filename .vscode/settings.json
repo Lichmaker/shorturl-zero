@@ -6,6 +6,7 @@
         "errx",
         "gorm",
         "logx",
+        "produer",
         "shorturl",
         "spaolacci"
     ]

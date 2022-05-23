@@ -1,6 +1,8 @@
 package shorts
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 func GetByShort(db *gorm.DB, shortStr string) (Short, error) {
 	model := Short{}

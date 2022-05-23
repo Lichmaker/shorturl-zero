@@ -1,19 +1,24 @@
 Name: shorturl.rpc
-ListenOn: 127.0.0.1:9001
+ListenOn: 0.0.0.0:9001
 Etcd:
   Hosts:
-  - 127.0.0.1:2379
+  - Etcd-server:2379
   Key: shorturl.rpc
-  # Pass: "123456"
-  # User: "root"
 Mysql:
-  DataSource: "root:lichmaker@tcp(127.0.0.1:3306)/shorturl?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+  DataSource: "root:yourpassword@tcp(my-mysql:3306)/shorturl?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
   MaxLifeTime: 300
   MaxIdleConn: 100
   MaxOpenConn: 25
 Jwt:
   Secret: "12345678"
 Redis:
-  Host: "127.0.0.1:6379"
+  Host: shorturlredis:6379
   Type: "node"
 BloomRedisKey: "short_url_micro_bloom"
+KafkaConfig:
+  Topic: "short_url_micro_kafka_topic"
+  Addr:
+    - hostkafka1:9093
+  ClientID: "short_url_micro_client_1"
+  ProducerCount: 2
+  ConsumerGroup: "short_url_micro_kafka_group"

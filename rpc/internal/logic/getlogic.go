@@ -2,7 +2,10 @@ package logic
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	"github.com/Shopify/sarama"
 	"github.com/lichmaker/short-url-micro/pkg/errx"
 	"github.com/lichmaker/short-url-micro/pkg/shorten"
 	"github.com/lichmaker/short-url-micro/rpc/internal/svc"
@@ -41,6 +44,12 @@ func (l *GetLogic) Get(in *short_url_micro.GetRequest) (*short_url_micro.GetResp
 	}
 	if model.Id == 0 {
 		return nil, errors.Wrapf(errx.NewWithCode(errx.CODE_DATA_NOT_FOUND), "查询short model不存在。 short:%s", in.Short)
+	}
+
+	l.svcCtx.KafkaProducerMsgChan <- &sarama.ProducerMessage{
+		Topic: l.svcCtx.Config.KafkaConfig.Topic,
+		Key:   sarama.StringEncoder(fmt.Sprint(time.Now().Unix())),
+		Value: sarama.StringEncoder(model.Short),
 	}
 
 	return &short_url_micro.GetResponse{

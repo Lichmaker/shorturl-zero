@@ -1,2 +1,3 @@
 api/etc/shorturl.yaml
 rpc/etc/shorturl.yaml
+kafkaqueue/etc/config.yml

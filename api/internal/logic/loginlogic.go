@@ -16,6 +16,12 @@ type LoginLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+type message struct {
+	Key     string `json:"key"`
+	Value   string `json:"value"`
+	Payload string `json:"message"`
+}
+
 func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) LoginLogic {
 	return LoginLogic{
 		Logger: logx.WithContext(ctx),
@@ -32,6 +38,8 @@ func (l *LoginLogic) Login(req types.LoginRequest) (resp *types.LoginResponse, e
 	if err != nil {
 		return nil, err
 	}
+
+	///////test
 
 	return &types.LoginResponse{
 		Token:     rpcResponse.Token,

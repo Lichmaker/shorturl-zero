@@ -1,0 +1,50 @@
+version: '3.4'
+
+services:
+  zoo1:
+    image: zookeeper:3.7.0
+    container_name: c_zoo1
+    hostname: hostzoo1
+    ports:
+      - 22181:2181
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=hostzoo1:2888:3888;2181
+      JVMFLAGS: -Xmx512m
+    restart: always
+    # volumes:
+    #   - "/data/zoodata/data:/data"
+    #   - "/data/zoodata/log:/data/log"
+    networks:
+      - shorturl_net
+
+  kafka1:
+    image: bitnami/kafka:3.1.0
+    container_name: c_kafka1
+    hostname: hostkafka1
+    # user: root
+    # volumes:
+    #   - /data/kafkadata/kafka1:/bitnami/kafka
+    depends_on:
+      - zoo1
+    ports:
+      - 9093:9093
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=hostzoo1:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://0.0.0.0:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://hostkafka1:9092,EXTERNAL://host.docker.internal:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_HEAP_OPTS=-Xmx512m -Xms512m
+    restart: always  
+    networks:
+      - shorturl_net
+ 
+networks:
+  shorturl_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -1,0 +1,112 @@
+version: '3.4'
+
+services:
+  shorturlrpc:
+    build: 
+      context: ./rpc
+      dockerfile: Dockerfile
+    image: shorturlrpc
+    container_name: shorturlrpc
+    ports:
+      - 9001:9001
+    restart: always
+    networks:
+      - etcdnetwork
+      - mysqlnetwork
+      - shorturlnetwork
+  
+  shorturlapi:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    image: shorturlapi
+    container_name: shorturlapi
+    ports:
+      - 8888:8888
+    restart: always
+    networks:
+      - etcdnetwork
+      - mysqlnetwork
+      - shorturlnetwork
+
+  shorturlqueue:
+    build: 
+      context: ./kafkaqueue
+      dockerfile: Dockerfile
+    image: shorturlkafkaqueue
+    container_name: shorturlkafkaqueue
+    depends_on:
+      - shorturlkafka
+    restart: always
+    networks:
+      - mysqlnetwork
+      - shorturlnetwork
+
+  shorturlzoo:
+    image: zookeeper:3.7.0
+    container_name: s_zoo1
+    hostname: hostzoo1
+    ports:
+      - 22181:2181
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=hostzoo1:2888:3888;2181
+      JVMFLAGS: -Xmx512m
+    restart: always
+    # volumes:
+    #   - "/data/zoodata/data:/data"
+    #   - "/data/zoodata/log:/data/log"
+    networks:
+      - shorturlnetwork
+
+  shorturlkafka:
+    image: bitnami/kafka:3.1.0
+    container_name: s_kafka1
+    hostname: hostkafka1
+    # user: root
+    # volumes:
+    #   - /data/kafkadata/kafka1:/bitnami/kafka
+    depends_on:
+      - shorturlzoo
+    ports:
+      - 9093:9093
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=hostzoo1:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://0.0.0.0:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://hostkafka1:9092,EXTERNAL://hostkafka1:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_HEAP_OPTS=-Xmx512m -Xms512m
+    restart: always  
+    networks:
+      - shorturlnetwork
+
+  shorturlredis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - shorturlnetwork
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 100M
+        reservations:
+          memory: 50M
+    
+networks:
+  shorturlnetwork:
+    driver: bridge
+    # ipam:
+    #   config:
+    #     - subnet: 172.20.0.0/16
+  etcdnetwork:
+    external:
+      name: etcdnetwork
+  mysqlnetwork:
+    external:
+      name: mysqlnetwork
+

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/lichmaker/short-url-micro/pkg/kafkahelper"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
@@ -16,4 +17,5 @@ type Config struct {
 		Secret string
 	}
 	BloomRedisKey string
+	KafkaConfig   kafkahelper.Config
 }

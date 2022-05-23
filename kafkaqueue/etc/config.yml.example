@@ -1,0 +1,13 @@
+Name: shorturl.kafka
+KafkaConfig:
+  Topic: "short_url_micro_kafka_topic"
+  Addr:
+    - hostkafka1:9093
+  ClientID: "short_url_micro_client_1"
+  ConsumerGroup: "short_url_micro_kafka_group"
+  ProducerCount: 3
+Mysql:
+  DataSource: "root:yourpassword@tcp(my-mysql:3306)/shorturl?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+  MaxLifeTime: 300
+  MaxIdleConn: 100
+  MaxOpenConn: 25

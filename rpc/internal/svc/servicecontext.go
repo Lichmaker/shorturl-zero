@@ -5,6 +5,7 @@ import (
 
 	"golang.org/x/sync/singleflight"
 
+	"github.com/Shopify/sarama"
 	"github.com/lichmaker/short-url-micro/rpc/internal/config"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	mysqldriver "gorm.io/driver/mysql"
@@ -12,10 +13,11 @@ import (
 )
 
 type ServiceContext struct {
-	Config    config.Config
-	GormDB    *gorm.DB
-	Redis     *redis.Redis
-	ShortenSg *singleflight.Group
+	Config               config.Config
+	GormDB               *gorm.DB
+	Redis                *redis.Redis
+	ShortenSg            *singleflight.Group
+	KafkaProducerMsgChan chan *sarama.ProducerMessage
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {

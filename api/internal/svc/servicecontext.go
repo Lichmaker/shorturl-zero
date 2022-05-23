@@ -2,13 +2,15 @@ package svc
 
 import (
 	"github.com/lichmaker/short-url-micro/api/internal/config"
+	"github.com/lichmaker/short-url-micro/pkg/kafkaproducer"
 	"github.com/lichmaker/short-url-micro/rpc/shorturl"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
-	Config   config.Config
-	ShortRpc shorturl.Shorturl
+	Config        config.Config
+	ShortRpc      shorturl.Shorturl
+	KafkaProducer *kafkaproducer.MyProducer
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {

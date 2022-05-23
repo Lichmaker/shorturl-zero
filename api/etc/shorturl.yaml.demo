@@ -7,7 +7,10 @@ Auth:
 ShortRpc:
   Etcd:
     Hosts:
-    - 127.0.0.1:2379
+    - Etcd-server:2379
     Key: "shorturl.rpc"
 AdminSecret: "123456"
 AppHost: "127.0.0.1"
+KafkaConfig:
+  ClientID: "short_url_micro_1"
+  ProducerCount: 2
