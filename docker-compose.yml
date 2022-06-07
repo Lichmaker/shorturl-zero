@@ -3,8 +3,8 @@ version: '3.4'
 services:
   shorturlrpc:
     build: 
-      context: ./rpc
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./rpc/Dockerfile
     image: shorturlrpc
     container_name: shorturlrpc
     ports:
@@ -17,8 +17,8 @@ services:
   
   shorturlapi:
     build: 
-      context: ./api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./api/Dockerfile
     image: shorturlapi
     container_name: shorturlapi
     ports:
@@ -31,8 +31,8 @@ services:
 
   shorturlqueue:
     build: 
-      context: ./kafkaqueue
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./kafkaqueue/Dockerfile
     image: shorturlkafkaqueue
     container_name: shorturlkafkaqueue
     depends_on:

@@ -25,7 +25,7 @@ docker run -d --name="shorturlapi" -p 8888:8888 --link Etcd-server:Etcd-server -
 
 # docker-compose
 ```
-docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose.yml up --build -d
 ```
 
 # etcd
