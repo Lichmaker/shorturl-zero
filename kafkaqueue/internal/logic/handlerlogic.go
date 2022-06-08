@@ -36,7 +36,7 @@ FORLOOP:
 			break FORLOOP
 		default:
 			logx.Infof("[Consumer] Message topic:%q partition:%d offset:%d add:%d body:%s \n", msg.Topic, msg.Partition, msg.Offset, claim.HighWaterMarkOffset()-msg.Offset, msg.Value)
-			m, err := shorts.GetByShort(h.GormDB, string(msg.Value))
+			m, err := shorts.GetByShort(h.Ctx, h.GormDB, string(msg.Value))
 			if err != nil {
 				logx.Errorf("消息处理异常，查询数据失败. msg %s , value %s", err.Error(), msg.Value)
 			} else {

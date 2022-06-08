@@ -105,7 +105,7 @@ func (s *Shorten) getFromDb(shortStr string) (shorts.Short, error) {
 
 	shortModelRes, err, fromShared := s.Sg.Do(fmt.Sprintf("shorten_query:%s", shortStr), func() (interface{}, error) {
 		var shortModel shorts.Short
-		shortModel, err := shorts.GetByShort(s.GormDB, shortStr)
+		shortModel, err := shorts.GetByShort(s.Ctx, s.GormDB, shortStr)
 		if err != nil {
 			return shortModel, err
 		}
