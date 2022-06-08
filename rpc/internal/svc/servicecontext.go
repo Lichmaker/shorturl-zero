@@ -6,6 +6,7 @@ import (
 	"golang.org/x/sync/singleflight"
 
 	"github.com/Shopify/sarama"
+	"github.com/lichmaker/short-url-micro/pkg/gormlogger"
 	"github.com/lichmaker/short-url-micro/rpc/internal/config"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	mysqldriver "gorm.io/driver/mysql"
@@ -23,7 +24,9 @@ type ServiceContext struct {
 func NewServiceContext(c config.Config) *ServiceContext {
 	db, err := gorm.Open(mysqldriver.New(mysqldriver.Config{
 		DSN: c.Mysql.DataSource,
-	}))
+	}), &gorm.Config{
+		Logger: gormlogger.NewGormLogger(),
+	})
 	if err != nil {
 		panic(err)
 	}

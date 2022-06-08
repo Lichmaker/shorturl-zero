@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
 	"time"
@@ -65,4 +66,10 @@ func ConvertNumToBase62(num uint) string {
 	}
 
 	return strings.Join(resultarr, "")
+}
+
+// MicrosecondsStr 将 time.Duration 类型（nano seconds 为单位）
+// 输出为小数点后 3 位的 ms （microsecond 毫秒，千分之一秒）
+func MicrosecondsStr(elapsed time.Duration) string {
+	return fmt.Sprintf("%.3fms", float64(elapsed.Nanoseconds())/1e6)
 }

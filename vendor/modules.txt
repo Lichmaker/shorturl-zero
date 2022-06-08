@@ -164,7 +164,7 @@ github.com/klauspost/compress/huff0
 github.com/klauspost/compress/internal/snapref
 github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
-# github.com/mattn/go-colorable v0.1.9
+# github.com/mattn/go-colorable v0.1.12
 ## explicit; go 1.13
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.14
@@ -280,6 +280,9 @@ github.com/zeromicro/go-zero/zrpc/resolver
 github.com/zeromicro/go-zero/zrpc/resolver/internal
 github.com/zeromicro/go-zero/zrpc/resolver/internal/kube
 github.com/zeromicro/go-zero/zrpc/resolver/internal/targets
+# github.com/zeromicro/zero-contrib/logx/zapx v0.0.0-20220604015126-80bd73b0c2a0
+## explicit; go 1.15
+github.com/zeromicro/zero-contrib/logx/zapx
 # go.etcd.io/etcd/api/v3 v3.5.4
 ## explicit; go 1.16
 go.etcd.io/etcd/api/v3/authpb
@@ -375,7 +378,7 @@ golang.org/x/oauth2/internal
 # golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 ## explicit
 golang.org/x/sync/singleflight
-# golang.org/x/sys v0.0.0-20220429233432-b5fbb4746d32
+# golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a
 ## explicit; go 1.17
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/plan9

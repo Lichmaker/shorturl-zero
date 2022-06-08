@@ -5,7 +5,10 @@
         "errorx",
         "errx",
         "gorm",
+        "kafkahelper",
+        "kafkaproducer",
         "logx",
+        "myzapx",
         "produer",
         "shorturl",
         "spaolacci"

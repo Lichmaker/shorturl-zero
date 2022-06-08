@@ -8,6 +8,7 @@ import (
 	"github.com/Shopify/sarama"
 	"github.com/lichmaker/short-url-micro/kafkaqueue/internal/config"
 	"github.com/lichmaker/short-url-micro/kafkaqueue/internal/server"
+	"github.com/lichmaker/short-url-micro/pkg/gormlogger"
 	"github.com/lichmaker/short-url-micro/pkg/kafkahelper"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -37,7 +38,9 @@ func main() {
 
 	db, err := gorm.Open(mysqldriver.New(mysqldriver.Config{
 		DSN: c.Mysql.DataSource,
-	}))
+	}), &gorm.Config{
+		Logger: gormlogger.NewGormLogger(),
+	})
 	if err != nil {
 		panic(err)
 	}
